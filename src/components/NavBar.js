@@ -1,6 +1,8 @@
 import logo from "../logo.svg";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import LoginButton from "../auth/LoginButton";
+import LogoutButton from "../auth/LogoutButton";
 
 function NavBar() {
   return (
@@ -27,6 +29,7 @@ function NavBar() {
             Goals
           </Nav.Link>
         </Nav>
+        <LoginButton></LoginButton> <LogoutButton></LogoutButton>
       </Navbar>
     </>
   );
