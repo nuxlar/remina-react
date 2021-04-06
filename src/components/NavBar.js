@@ -21,19 +21,22 @@ function NavBar() {
           />{" "}
           Project Remina
         </Navbar.Brand>
-        <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/todos">
-            Todos
-          </Nav.Link>
-          <Nav.Link as={Link} to="/habits">
-            Habits
-          </Nav.Link>
-          <Nav.Link as={Link} to="/goals">
-            Goals
-          </Nav.Link>
-        </Nav>
         {isAuthenticated ? (
-          <LogoutButton></LogoutButton>
+          <>
+            <Nav className="mr-auto">
+              <Nav.Link as={Link} to="/todos">
+                Todos
+              </Nav.Link>
+              <Nav.Link as={Link} to="/habits">
+                Habits
+              </Nav.Link>
+              <Nav.Link as={Link} to="/goals">
+                Goals
+              </Nav.Link>
+            </Nav>
+
+            <LogoutButton></LogoutButton>
+          </>
         ) : (
           <LoginButton></LoginButton>
         )}
