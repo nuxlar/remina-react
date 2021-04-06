@@ -1,10 +1,13 @@
 import logo from "../logo.svg";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from "../auth/LoginButton";
 import LogoutButton from "../auth/LogoutButton";
 
 function NavBar() {
+  const { isAuthenticated } = useAuth0();
+
   return (
     <>
       <Navbar bg="light" variant="light">
@@ -29,7 +32,11 @@ function NavBar() {
             Goals
           </Nav.Link>
         </Nav>
-        <LoginButton></LoginButton> <LogoutButton></LogoutButton>
+        {isAuthenticated ? (
+          <LogoutButton></LogoutButton>
+        ) : (
+          <LoginButton></LoginButton>
+        )}
       </Navbar>
     </>
   );
