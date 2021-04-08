@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spinner, Container, Row, Col } from "react-bootstrap";
+import { Spinner, Container, Col } from "react-bootstrap";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
