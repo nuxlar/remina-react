@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Spinner, Container, Row, Col } from "react-bootstrap";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
@@ -31,7 +32,15 @@ function Dashboard() {
   }, [user]);
 
   if (!apiUser && isAuthenticated) {
-    return <div>Loading...</div>;
+    return (
+      <Container fluid>
+        <Col className="justify-content-md-center">
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        </Col>
+      </Container>
+    );
   }
 
   return (
