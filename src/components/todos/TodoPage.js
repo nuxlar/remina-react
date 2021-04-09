@@ -18,32 +18,59 @@ import {
 
 function TodoPage() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const [todos, setTodos] = useState([]);
+  const [userMetadata, setUserMetadata] = useState(null);
+  const [todos, setTodos] = useState(null);
   const [modalShow, setModalShow] = useState(false);
   const [editTodo, setEditTodo] = useState(null);
   const [filter, setFilter] = useState("Uncompleted");
 
-  useEffect(() => {
-    const getTodos = async () => {
-      try {
-        const accessToken = await getAccessTokenSilently({
-          audience: `https://project-remina/`,
-        });
-        const options = {
-          method: "GET",
-          url: `http://localhost:8000/todos?username=${user.sub}`,
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-        };
-        const response = await axios(options);
-        setTodos(response.data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
+  const getUserMetadata = async () => {
+    const domain = "dev-l0qhbike.us.auth0.com";
 
+    try {
+      const accessToken = await getAccessTokenSilently({
+        audience: `https://${domain}/api/v2/`,
+        scope: "read:current_user",
+      });
+
+      const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
+
+      const metadataResponse = await axios.get(userDetailsByIdUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const user_metadata = await metadataResponse;
+
+      setUserMetadata(user_metadata.data.user_metadata);
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
+  const getTodos = async () => {
+    try {
+      const accessToken = await getAccessTokenSilently({
+        audience: `https://project-remina/`,
+      });
+      const options = {
+        method: "GET",
+        url: `http://localhost:8000/todos?username=${user.sub}`,
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      };
+      const response = await axios(options);
+      setTodos(response.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
     getTodos();
+    getUserMetadata();
   }, [user]);
 
   if (!isAuthenticated)
@@ -62,8 +89,19 @@ function TodoPage() {
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
     // TODO: fill with actual user once auth and etc.. is added
-    formDataObj.user = 1;
-    const res = await postTodo(formDataObj);
+    formDataObj.user = userMetadata.api_user_id;
+    const accessToken = await getAccessTokenSilently({
+      audience: `https://project-remina/`,
+    });
+    const options = {
+      method: "POST",
+      url: `${process.env.REACT_APP_API_URL}/todos`,
+      data: formDataObj,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios(options);
     if (res.status === 201) {
       // Fetch todos again and close the modal
 
@@ -79,13 +117,12 @@ function TodoPage() {
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
     // TODO: fill with actual user once auth and etc.. is added
-    formDataObj.user = 1;
+    formDataObj.user = userMetadata.api_user_id;
     formDataObj.id = parseInt(e.target.offsetParent.id);
     const res = await patchTodo(formDataObj);
     if (res.status === 200) {
       // Fetch todos again and close the modal
-
-      toggleModal();
+      getTodos().then(() => toggleModal());
     } else {
       // display an error message
       alert(res);
@@ -164,42 +201,46 @@ function TodoPage() {
       <Row>
         <CardColumns>
           {todos
-            .filter((todo) => todosFilter(filter, todo))
-            .map((todo) => (
-              <Card style={{ width: "18rem" }} id={todo.id} key={todo.id}>
-                <Card.Body>
-                  <Card.Title>{todo.description}</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">
-                    {todo.xp}XP
-                  </Card.Subtitle>
-                  {todo.dueDate && (
-                    <Card.Subtitle className="mb-2 text-muted">
-                      {todo.dueDate}
-                    </Card.Subtitle>
-                  )}
-                  {todo.dueTime && (
-                    <Card.Subtitle className="mb-2 text-muted">
-                      {todo.dueTime}
-                    </Card.Subtitle>
-                  )}
-                  <FormCheck
-                    type="checkbox"
-                    label="Completed"
-                    onChange={handleMarkCompleted}
-                    defaultChecked={todo.completed}
-                  />
-                  <Button
-                    variant="secondary"
-                    onClick={(e) => handleEditModal(e.target.offsetParent.id)}
-                  >
-                    Edit
-                  </Button>
-                  <Button variant="danger" onClick={handleDelete}>
-                    Delete
-                  </Button>
-                </Card.Body>
-              </Card>
-            ))}
+            ? todos
+                .filter((todo) => todosFilter(filter, todo))
+                .map((todo) => (
+                  <Card style={{ width: "18rem" }} id={todo.id} key={todo.id}>
+                    <Card.Body>
+                      <Card.Title>{todo.description}</Card.Title>
+                      <Card.Subtitle className="mb-2 text-muted">
+                        {todo.xp}XP
+                      </Card.Subtitle>
+                      {todo.dueDate && (
+                        <Card.Subtitle className="mb-2 text-muted">
+                          {todo.dueDate}
+                        </Card.Subtitle>
+                      )}
+                      {todo.dueTime && (
+                        <Card.Subtitle className="mb-2 text-muted">
+                          {todo.dueTime}
+                        </Card.Subtitle>
+                      )}
+                      <FormCheck
+                        type="checkbox"
+                        label="Completed"
+                        onChange={handleMarkCompleted}
+                        defaultChecked={todo.completed}
+                      />
+                      <Button
+                        variant="secondary"
+                        onClick={(e) =>
+                          handleEditModal(e.target.offsetParent.id)
+                        }
+                      >
+                        Edit
+                      </Button>
+                      <Button variant="danger" onClick={handleDelete}>
+                        Delete
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                ))
+            : "No Todos yet"}
         </CardColumns>
       </Row>
       <TodoModal
