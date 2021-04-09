@@ -45,7 +45,7 @@ function TodoPage() {
 
       setUserMetadata(user_metadata.data.user_metadata);
     } catch (e) {
-      console.log(e.message);
+      <Alert variant="danger">{e.message}</Alert>;
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import {
@@ -9,21 +9,65 @@ import {
   Col,
   Container,
   Spinner,
+  Alert,
 } from "react-bootstrap";
-import {
-  getHabits,
-  postHabit,
-  patchHabit,
-  deleteHabit,
-  postCheck,
-} from "../hooks/apiCalls";
 
 function HabitPage() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [habits, setHabits] = useState(null);
+  const [userMetadata, setUserMetadata] = useState(null);
   const [editHabit, setEditHabit] = useState(null);
   const [showForm, setShowForm] = useState(true);
   const [showFormE, setShowFormE] = useState(true);
+
+  const getUserMetadata = async () => {
+    const domain = "dev-l0qhbike.us.auth0.com";
+
+    try {
+      const accessToken = await getAccessTokenSilently({
+        audience: `https://${domain}/api/v2/`,
+        scope: "read:current_user",
+      });
+
+      const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
+
+      const metadataResponse = await axios.get(userDetailsByIdUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      const user_metadata = await metadataResponse;
+
+      setUserMetadata(user_metadata.data.user_metadata);
+    } catch (e) {
+      <Alert variant="danger">{e.message}</Alert>;
+    }
+  };
+
+  const getHabits = async () => {
+    try {
+      const accessToken = await getAccessTokenSilently({
+        audience: `https://project-remina/`,
+      });
+      const options = {
+        method: "GET",
+        url: `http://localhost:8000/todos?username=${user.sub}`,
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      };
+      const response = await axios(options);
+      setHabits(response.data);
+    } catch (error) {
+      <Alert variant="danger">{error.message}</Alert>;
+    }
+  };
+
+  useEffect(() => {
+    getHabits();
+    getUserMetadata();
+  }, [user]);
 
   if (!isAuthenticated)
     return (
@@ -40,16 +84,26 @@ function HabitPage() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    // TODO: fill with actual user once auth and etc.. is added
-    formDataObj.user = 1;
-
-    const res = await postHabit(formDataObj);
+    formDataObj.user = userMetadata.api_user_id;
+    const accessToken = await getAccessTokenSilently({
+      audience: `https://project-remina/`,
+    });
+    const options = {
+      method: "POST",
+      url: `${process.env.REACT_APP_API_URL}/habits`,
+      data: formDataObj,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios(options);
     if (res.status === 201) {
       // Fetch habits again and close the form
+      await getHabits();
       setShowForm(false);
     } else {
       // display an error message
-      alert(res);
+      <Alert variant="danger">{res}</Alert>;
     }
   };
 
@@ -57,39 +111,71 @@ function HabitPage() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    // TODO: fill with actual user once auth and etc.. is added
-    formDataObj.user = 1;
     formDataObj.id = editHabit.id;
-    const res = await patchHabit(formDataObj);
+    formDataObj.user = userMetadata.api_user_id;
+    const accessToken = await getAccessTokenSilently({
+      audience: `https://project-remina/`,
+    });
+    const options = {
+      method: "PATCH",
+      url: `${process.env.REACT_APP_API_URL}/habits/${formDataObj.id}`,
+      data: formDataObj,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios(options);
     if (res.status === 200) {
       // Fetch habits again and close the form
-
+      await getHabits();
       setShowForm(true);
     } else {
       // display an error message
-      console.log(res);
-      alert(res);
+      <Alert variant="danger">{res}</Alert>;
     }
   };
 
   const handleDelete = async (e) => {
-    const res = await deleteHabit(e.target.parentElement.parentElement.id);
+    const accessToken = await getAccessTokenSilently({
+      audience: `https://project-remina/`,
+    });
+    const options = {
+      method: "DELETE",
+      url: `${process.env.REACT_APP_API_URL}/habits/${e.target.parentElement.parentElement.id}`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios(options);
     if (res.status === 204) {
       // Fetch habits again
+      await getHabits();
     } else {
       // display an error message
-      alert(res);
+      <Alert variant="danger">{res}</Alert>;
     }
   };
 
   const handleCheckAdd = async (e) => {
     const check = { habit: e.target.parentElement.parentElement.id };
-    const res = await postCheck(check);
+    const accessToken = await getAccessTokenSilently({
+      audience: `https://project-remina/`,
+    });
+    const options = {
+      method: "POST",
+      url: `${process.env.REACT_APP_API_URL}/checks`,
+      data: check,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios(options);
     if (res.status === 201) {
       // Fetch habits again
+      await getHabits();
     } else {
       // display an error message
-      alert(res);
+      <Alert variant="danger">{res}</Alert>;
     }
   };
 
