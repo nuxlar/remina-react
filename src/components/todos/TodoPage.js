@@ -5,6 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
 import {
+  Alert,
   Spinner,
   Container,
   Row,
@@ -88,7 +89,6 @@ function TodoPage() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    // TODO: fill with actual user once auth and etc.. is added
     formDataObj.user = userMetadata.api_user_id;
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
@@ -104,11 +104,11 @@ function TodoPage() {
     const res = await axios(options);
     if (res.status === 201) {
       // Fetch todos again and close the modal
-
+      await getTodos();
       setModalShow(false);
     } else {
       // display an error message
-      alert(res);
+      <Alert variant="danger">{res}</Alert>;
     }
   };
 
@@ -116,16 +116,27 @@ function TodoPage() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    // TODO: fill with actual user once auth and etc.. is added
     formDataObj.user = userMetadata.api_user_id;
     formDataObj.id = parseInt(e.target.offsetParent.id);
-    const res = await patchTodo(formDataObj);
+    const accessToken = await getAccessTokenSilently({
+      audience: `https://project-remina/`,
+    });
+    const options = {
+      method: "PATCH",
+      url: `${process.env.REACT_APP_API_URL}/todos/${formDataObj.id}`,
+      data: formDataObj,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios(options);
     if (res.status === 200) {
       // Fetch todos again and close the modal
-      getTodos().then(() => toggleModal());
+      await getTodos();
+      toggleModal();
     } else {
       // display an error message
-      alert(res);
+      <Alert variant="danger">{res}</Alert>;
     }
   };
 
@@ -133,22 +144,46 @@ function TodoPage() {
     const todoId = parseInt(e.target.parentElement.offsetParent.id);
     const todo = todos.find((element) => element.id === todoId);
     const editTodo = { completed: !todo.completed, id: todoId };
-    const res = await patchTodo(editTodo);
+
+    const accessToken = await getAccessTokenSilently({
+      audience: `https://project-remina/`,
+    });
+    const options = {
+      method: "PATCH",
+      url: `${process.env.REACT_APP_API_URL}/todos/${editTodo.id}`,
+      data: editTodo,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios(options);
     if (res.status === 200) {
-      // Fetch todos again and close the modal
+      await getTodos();
     } else {
       // display an error message
-      alert(res);
+      <Alert variant="danger">{res}</Alert>;
     }
   };
 
   const handleDelete = async (e) => {
-    const res = await deleteTodo(e.target.offsetParent.id);
+    const accessToken = await getAccessTokenSilently({
+      audience: `https://project-remina/`,
+    });
+    const options = {
+      method: "DELETE",
+      url: `${process.env.REACT_APP_API_URL}/todos/${e.target.offsetParent.id}`,
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios(options);
+
     if (res.status === 204) {
       // Fetch todos again
+      await getTodos();
     } else {
       // display an error message
-      alert(res);
+      <Alert variant="danger">{res}</Alert>;
     }
   };
 
