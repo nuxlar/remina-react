@@ -52,7 +52,7 @@ function GoalPage() {
       });
       const options = {
         method: "GET",
-        url: `http://localhost:8000/goals?username=${user.sub}`,
+        url: `${process.env.REACT_APP_API_URL}/goals?username=${user.sub}`,
         headers: {
           authorization: `Bearer ${accessToken}`,
         },

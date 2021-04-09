@@ -39,7 +39,7 @@ function Dashboard() {
           audience: `https://project-remina/`,
         });
         const response = await axios.post(
-          "http://localhost:8000/users",
+          `${process.env.REACT_APP_API_URL}/users`,
           { user: { username: user.sub } },
           {
             headers: {

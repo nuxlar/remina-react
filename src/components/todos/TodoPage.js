@@ -56,7 +56,7 @@ function TodoPage() {
       });
       const options = {
         method: "GET",
-        url: `http://localhost:8000/todos?username=${user.sub}`,
+        url: `${process.env.REACT_APP_API_URL}/todos?username=${user.sub}`,
         headers: {
           authorization: `Bearer ${accessToken}`,
         },

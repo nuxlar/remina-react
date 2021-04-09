@@ -52,7 +52,7 @@ function HabitPage() {
       });
       const options = {
         method: "GET",
-        url: `http://localhost:8000/habits?username=${user.sub}`,
+        url: `${process.env.REACT_APP_API_URL}/habits?username=${user.sub}`,
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
