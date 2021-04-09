@@ -18,32 +18,32 @@ import {
 
 function TodoPage() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const [todos, setTodos] = useState(null);
+  const [todos, setTodos] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [editTodo, setEditTodo] = useState(null);
   const [filter, setFilter] = useState("Uncompleted");
 
   useEffect(() => {
-    const trying = async () => {
+    const getTodos = async () => {
       try {
         const accessToken = await getAccessTokenSilently({
           audience: `https://project-remina/`,
         });
-        const response = await axios.get(
-          `http://localhost:8000/todos?username=${user.sub}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const options = {
+          method: "GET",
+          url: `http://localhost:8000/todos?username=${user.sub}`,
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+          },
+        };
+        const response = await axios(options);
         setTodos(response.data);
       } catch (error) {
         console.log(error.message);
       }
     };
 
-    trying();
+    getTodos();
   }, [user]);
 
   if (!isAuthenticated)
@@ -139,15 +139,13 @@ function TodoPage() {
       <Row className="justify-content-md-center">
         <Col>
           <h2>Todos Page</h2>
-        </Col>
-        <Col>
           <Button variant="primary" onClick={toggleModal}>
             Add Todo &#43;
           </Button>
         </Col>
       </Row>
 
-      <Row>
+      <Row className="justify-content-md-center">
         <Form.Group as={Form.Row}>
           <Form.Label column sm={3}>
             Filter:
