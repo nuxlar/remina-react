@@ -18,7 +18,7 @@ import {
 
 function TodoPage() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const [todos, setTodo] = useState(null);
+  const [todos, setTodos] = useState(null);
   const [modalShow, setModalShow] = useState(false);
   const [editTodo, setEditTodo] = useState(null);
   const [filter, setFilter] = useState("Uncompleted");
@@ -29,16 +29,15 @@ function TodoPage() {
         const accessToken = await getAccessTokenSilently({
           audience: `https://project-remina/`,
         });
-        const response = await axios.post(
-          "http://localhost:8000/users",
-          { user: { username: user.sub } },
+        const response = await axios.get(
+          `http://localhost:8000/todos?username=${user.sub}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           }
         );
-        setTodo(response.data);
+        setTodos(response.data);
       } catch (error) {
         console.log(error.message);
       }
@@ -148,7 +147,7 @@ function TodoPage() {
         </Col>
       </Row>
 
-      <div>
+      <Row>
         <Form.Group as={Form.Row}>
           <Form.Label column sm={3}>
             Filter:
@@ -163,46 +162,48 @@ function TodoPage() {
             </Form.Control>
           </Col>
         </Form.Group>
-      </div>
-      <CardColumns>
-        {todos
-          .filter((todo) => todosFilter(filter, todo))
-          .map((todo) => (
-            <Card style={{ width: "18rem" }} id={todo.id} key={todo.id}>
-              <Card.Body>
-                <Card.Title>{todo.description}</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">
-                  {todo.xp}XP
-                </Card.Subtitle>
-                {todo.dueDate && (
+      </Row>
+      <Row>
+        <CardColumns>
+          {todos
+            .filter((todo) => todosFilter(filter, todo))
+            .map((todo) => (
+              <Card style={{ width: "18rem" }} id={todo.id} key={todo.id}>
+                <Card.Body>
+                  <Card.Title>{todo.description}</Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">
-                    {todo.dueDate}
+                    {todo.xp}XP
                   </Card.Subtitle>
-                )}
-                {todo.dueTime && (
-                  <Card.Subtitle className="mb-2 text-muted">
-                    {todo.dueTime}
-                  </Card.Subtitle>
-                )}
-                <FormCheck
-                  type="checkbox"
-                  label="Completed"
-                  onChange={handleMarkCompleted}
-                  defaultChecked={todo.completed}
-                />
-                <Button
-                  variant="secondary"
-                  onClick={(e) => handleEditModal(e.target.offsetParent.id)}
-                >
-                  Edit
-                </Button>
-                <Button variant="danger" onClick={handleDelete}>
-                  Delete
-                </Button>
-              </Card.Body>
-            </Card>
-          ))}
-      </CardColumns>
+                  {todo.dueDate && (
+                    <Card.Subtitle className="mb-2 text-muted">
+                      {todo.dueDate}
+                    </Card.Subtitle>
+                  )}
+                  {todo.dueTime && (
+                    <Card.Subtitle className="mb-2 text-muted">
+                      {todo.dueTime}
+                    </Card.Subtitle>
+                  )}
+                  <FormCheck
+                    type="checkbox"
+                    label="Completed"
+                    onChange={handleMarkCompleted}
+                    defaultChecked={todo.completed}
+                  />
+                  <Button
+                    variant="secondary"
+                    onClick={(e) => handleEditModal(e.target.offsetParent.id)}
+                  >
+                    Edit
+                  </Button>
+                  <Button variant="danger" onClick={handleDelete}>
+                    Delete
+                  </Button>
+                </Card.Body>
+              </Card>
+            ))}
+        </CardColumns>
+      </Row>
       <TodoModal
         show={modalShow}
         todo={editTodo}

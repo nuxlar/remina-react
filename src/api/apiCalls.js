@@ -170,7 +170,6 @@ async function deleteGoal(goalId) {
 
 export {
   getOrCreateUser,
-
   postTodo,
   deleteTodo,
   patchTodo,
@@ -178,7 +177,6 @@ export {
   patchHabit,
   deleteHabit,
   postCheck,
-
   postGoal,
   patchGoal,
   deleteGoal,
