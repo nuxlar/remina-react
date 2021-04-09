@@ -80,11 +80,7 @@ function TodoModal(props) {
               <Form.Row>
                 <Col>
                   <Form.Control type="date" name="dueDate" />
-                  <Form.Control
-                    type="time"
-                    defaultValue="00:00"
-                    name="dueTime"
-                  />
+                  <Form.Control type="time" name="dueTime" />
                 </Col>
                 <Col>
                   <Form.Check

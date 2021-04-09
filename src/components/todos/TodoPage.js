@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import TodoModal from "./TodoModal";
-import { postTodo, deleteTodo, patchTodo } from "../../api/apiCalls";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
