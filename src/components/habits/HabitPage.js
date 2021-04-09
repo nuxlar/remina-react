@@ -52,7 +52,7 @@ function HabitPage() {
       });
       const options = {
         method: "GET",
-        url: `http://localhost:8000/todos?username=${user.sub}`,
+        url: `http://localhost:8000/habits?username=${user.sub}`,
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
@@ -256,24 +256,26 @@ function HabitPage() {
           </tr>
         </thead>
         <tbody>
-          {habits.map((habit) => (
-            <tr key={habit.id} id={habit.id}>
-              <td onClick={(e) => handleEdit(e.target.parentElement.id)}>
-                <Button variant="danger" onClick={handleDelete}>
-                  Delete
-                </Button>
-                {habit.description}
-                {habit.flags.todayCompleted ? null : (
-                  <Button variant="primary" onClick={handleCheckAdd}>
-                    Add
-                  </Button>
-                )}
-              </td>
-              {habit.checks.map((check, index) => (
-                <td key={index}>{typeof check !== "number" ? "O" : "X"}</td>
-              ))}
-            </tr>
-          ))}
+          {habits
+            ? habits.map((habit) => (
+                <tr key={habit.id} id={habit.id}>
+                  <td onClick={(e) => handleEdit(e.target.parentElement.id)}>
+                    <Button variant="danger" onClick={handleDelete}>
+                      Delete
+                    </Button>
+                    {habit.description}
+                    {habit.flags.todayCompleted ? null : (
+                      <Button variant="primary" onClick={handleCheckAdd}>
+                        Add
+                      </Button>
+                    )}
+                  </td>
+                  {habit.checks.map((check, index) => (
+                    <td key={index}>{typeof check !== "number" ? "O" : "X"}</td>
+                  ))}
+                </tr>
+              ))
+            : "You don't have any habits yet!"}
         </tbody>
       </Table>
     </Container>
