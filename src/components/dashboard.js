@@ -44,7 +44,7 @@ function Dashboard() {
           url: `${process.env.REACT_APP_API_URL}/users`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            Accept: "application/json",
+            Accept: "application/json,text/*;q=0.99",
             "Content-Type": "application/x-www-form-urlencoded",
           },
           data: { user: { username: user.sub } },
