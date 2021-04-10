@@ -39,17 +39,17 @@ function Dashboard() {
         const accessToken = await getAccessTokenSilently({
           audience: `https://project-remina/`,
         });
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/users`,
-          { user: { username: user.sub } },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              Accept: "application/json",
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-          }
-        );
+        const options = {
+          method: "POST",
+          url: `${process.env.REACT_APP_API_URL}/users`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          data: { user: { username: user.sub } },
+        };
+        const response = await axios(options);
         setApiUser(response.data);
         updateAuthUserMetadata(response.data);
       } catch (error) {
