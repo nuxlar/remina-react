@@ -46,7 +46,7 @@ function Dashboard() {
             headers: {
               Authorization: `Bearer ${accessToken}`,
               Accept: "application/json",
-              "Content-Type": "application/json",
+              "Content-Type": "application/x-www-form-urlencoded",
             },
           }
         );
