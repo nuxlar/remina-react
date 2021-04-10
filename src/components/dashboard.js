@@ -47,7 +47,7 @@ function Dashboard() {
             accept: "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
           },
-          data: { user: { username: user.sub } },
+          body: { user: { username: user.sub } },
         };
         const response = await axios(options);
         setApiUser(response.data);
