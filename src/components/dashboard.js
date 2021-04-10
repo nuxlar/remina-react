@@ -21,7 +21,8 @@ function Dashboard() {
         url: `https://${domain}/api/v2/users/${user.sub}`,
         headers: {
           authorization: `Bearer ${accessToken}`,
-          "content-type": "application/json",
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
         data: { user_metadata: { api_user_id: data.id } },
       };
