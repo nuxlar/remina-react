@@ -41,10 +41,10 @@ function Dashboard() {
         });
         const options = {
           method: "POST",
-          url: `${process.env.REACT_APP_API_URL}/users`,
+          url: `${process.env.REACT_APP_API_URL}/users.json`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            Accept: "application/json,text/*;q=0.99",
+            accept: "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
           },
           data: { user: { username: user.sub } },
