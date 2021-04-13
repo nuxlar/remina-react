@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spinner, Container, Col } from "react-bootstrap";
+import { Spinner, Container, Col, Row, ProgressBar } from "react-bootstrap";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
@@ -73,10 +73,25 @@ function Dashboard() {
   return (
     <div>
       {isAuthenticated && apiUser ? (
-        <>
-          <h2>Dashboard Page</h2>
-          <h3>Level {apiUser.level}</h3>
-        </>
+        <Container>
+          <Row className="justify-content-md-center">
+            <Col>
+              <h2>Your Dashboard</h2>
+            </Col>
+          </Row>
+          <Row className="justify-content-md-center">
+            <Col>
+              <h3>
+                Level {apiUser.level} | {apiUser.xp}/{apiUser.xp_to_lvlup}XP
+              </h3>
+              <ProgressBar
+                animated
+                max={apiUser.xp_to_lvlup}
+                now={apiUser.xp}
+              />
+            </Col>
+          </Row>
+        </Container>
       ) : (
         <>
           {" "}
