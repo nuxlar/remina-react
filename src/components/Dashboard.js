@@ -41,13 +41,11 @@ function Dashboard() {
         });
         const options = {
           method: "POST",
-          url: `${process.env.REACT_APP_API_URL}/users.json`,
+          url: `${process.env.REACT_APP_API_URL}/users`,
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            accept: "application/json",
-            "Content-Type": "application/x-www-form-urlencoded",
           },
-          body: { user: { username: user.sub } },
+          data: { user: { username: user.sub } },
         };
         const response = await axios(options);
         setApiUser(response.data);
