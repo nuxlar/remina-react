@@ -94,12 +94,15 @@ function Dashboard() {
               />
             </Col>
           </Row>
+          <hr className="solid" />
           <Row>
             <GoalPage apiUser={apiUser} />
           </Row>
+          <hr className="solid" />
           <Row>
             <HabitPage apiUser={apiUser} />
           </Row>
+          <hr className="solid" />
           <Row>
             <TodoPage apiUser={apiUser} />
           </Row>
