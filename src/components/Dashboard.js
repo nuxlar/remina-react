@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner, Container, Col, Row, ProgressBar } from "react-bootstrap";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
+import GoalPage from "./goals/GoalPage";
 
 function Dashboard() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -33,30 +34,53 @@ function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    const getOrCreateUser = async () => {
-      try {
-        const accessToken = await getAccessTokenSilently({
-          audience: `https://project-remina/`,
-        });
-        const options = {
-          method: "POST",
-          url: `${process.env.REACT_APP_API_URL}/users`,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          data: { user: { username: user.sub } },
-        };
-        const response = await axios(options);
-        setApiUser(response.data);
-        updateAuthUserMetadata(response.data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
+  const getOrCreateUser = async () => {
+    try {
+      const accessToken = await getAccessTokenSilently({
+        audience: `https://project-remina/`,
+      });
+      const options = {
+        method: "POST",
+        url: `${process.env.REACT_APP_API_URL}/users`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: { user: { username: user.sub } },
+      };
+      const response = await axios(options);
+      setApiUser(response.data);
+      updateAuthUserMetadata(response.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
+  const getApiUser = async (pk) => {
+    try {
+      const accessToken = await getAccessTokenSilently({
+        audience: `https://project-remina/`,
+      });
+      const options = {
+        method: "POST",
+        url: `${process.env.REACT_APP_API_URL}/users/${pk}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+      const response = await axios(options);
+      setApiUser(response.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
     getOrCreateUser();
   }, [user]);
+
+  const trigger = (pk) => {
+    getApiUser(pk);
+  };
 
   if (!apiUser && isAuthenticated) {
     return (
@@ -91,12 +115,16 @@ function Dashboard() {
               />
             </Col>
           </Row>
+          <Row>
+            <GoalPage apiUser={apiUser} trigger={trigger} />
+          </Row>
+          <Row></Row>
+          <Row></Row>
         </Container>
       ) : (
         <>
           {" "}
-          <h2>Home Page</h2>
-          <h3>About</h3>
+          <h2>Home Page (Login/Sign Up to get started!)</h2>
         </>
       )}
     </div>

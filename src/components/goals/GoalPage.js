@@ -12,38 +12,13 @@ import {
   Spinner,
 } from "react-bootstrap";
 
-function GoalPage() {
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const [userMetadata, setUserMetadata] = useState(null);
+function GoalPage(props) {
+  const apiUser = props.apiUser;
+  const { getAccessTokenSilently } = useAuth0();
   const [data, setData] = useState(null);
   const [editGoal, setEditGoal] = useState(null);
   const [showForm, setShowForm] = useState(true);
   const [showFormE, setShowFormE] = useState(true);
-
-  const getUserMetadata = async () => {
-    const domain = "dev-l0qhbike.us.auth0.com";
-
-    try {
-      const accessToken = await getAccessTokenSilently({
-        audience: `https://${domain}/api/v2/`,
-        scope: "read:current_user",
-      });
-
-      const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
-
-      const metadataResponse = await axios.get(userDetailsByIdUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      const user_metadata = await metadataResponse;
-
-      setUserMetadata(user_metadata.data.user_metadata);
-    } catch (e) {
-      <Alert variant="danger">{e.message}</Alert>;
-    }
-  };
 
   const getGoals = async () => {
     try {
@@ -52,7 +27,7 @@ function GoalPage() {
       });
       const options = {
         method: "GET",
-        url: `${process.env.REACT_APP_API_URL}/goals?username=${user.sub}`,
+        url: `${process.env.REACT_APP_API_URL}/goals?username=${apiUser.username}`,
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
@@ -65,12 +40,7 @@ function GoalPage() {
     }
   };
 
-  useEffect(() => {
-    getGoals();
-    getUserMetadata();
-  }, [user]);
-
-  if (!isAuthenticated)
+  if (!apiUser)
     return (
       <Container fluid>
         <Col className="justify-content-md-center">
@@ -85,7 +55,7 @@ function GoalPage() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    formDataObj.user = userMetadata.api_user_id;
+    formDataObj.user = apiUser.id;
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
     });
@@ -100,7 +70,7 @@ function GoalPage() {
     const res = await axios(options);
     if (res.status === 201) {
       // Fetch goals again and close the form
-      await getGoals();
+      await props.trigger(apiUser.id);
       setShowForm(true);
     } else {
       // display an error message
@@ -114,7 +84,7 @@ function GoalPage() {
     });
     const options = {
       method: "DELETE",
-      url: `${process.env.REACT_APP_API_URL}/goals/${e.target.parentElement.parentElement.id}`,
+      url: `${process.env.REACT_APP_API_URL}/goals/${e.target.parentElement.parentElement.parentElement.id}`,
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
@@ -122,7 +92,7 @@ function GoalPage() {
     const res = await axios(options);
     if (res.status === 204) {
       // Fetch goals again
-      await getGoals();
+      await props.trigger(apiUser.id);
     } else {
       // display an error message
       <Alert variant="danger">{res}</Alert>;
@@ -130,8 +100,9 @@ function GoalPage() {
   };
 
   const handleMarkCompleted = async (e) => {
+    console.log(e.target);
     const goalId = parseInt(
-      e.target.parentElement.parentElement.parentElement.id
+      e.target.parentElement.parentElement.parentElement.parentElement.id
     );
     const editGoal = { completed: true, id: goalId };
     const accessToken = await getAccessTokenSilently({
@@ -148,7 +119,7 @@ function GoalPage() {
     const res = await axios(options);
     if (res.status === 200) {
       // Fetch goals again and close the modal
-      await getGoals();
+      await props.trigger(apiUser.id);
     } else {
       // display an error message
       <Alert variant="danger">{res}</Alert>;
@@ -159,7 +130,7 @@ function GoalPage() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    formDataObj.user = userMetadata.api_user_id;
+    formDataObj.user = apiUser.id;
     formDataObj.id = editGoal.id;
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
@@ -175,7 +146,7 @@ function GoalPage() {
     const res = await axios(options);
     if (res.status === 200) {
       // Fetch goals again and close the form
-      await getGoals();
+      await props.trigger(apiUser.id);
       setShowForm(true);
     } else {
       // display an error message
@@ -206,7 +177,7 @@ function GoalPage() {
     <Container>
       <Row className="justify-content-md-center">
         <Col>
-          <h2>Goals Page</h2>
+          <h2>Goals</h2>
           <Button
             variant="primary"
             onClick={handleToggle}
@@ -258,8 +229,8 @@ function GoalPage() {
           </Button>
         </Form>
       )}
-      {data
-        ? data.goals.map((goal) => {
+      {apiUser
+        ? apiUser.goals.map((goal) => {
             return (
               <Container key={goal.id}>
                 <h5>{`This ${goal.timePeriod}'s goal: `}</h5>
@@ -282,7 +253,7 @@ function GoalPage() {
               </Container>
             );
           })
-        : "You don't have any goals yet."}
+        : `${apiUser.username} He`}
     </Container>
   );
 }
