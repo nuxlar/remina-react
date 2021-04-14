@@ -13,8 +13,7 @@ import {
 } from "react-bootstrap";
 
 function GoalPage(props) {
-  const apiUser = props.apiUser;
-  const { getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [data, setData] = useState(null);
   const [editGoal, setEditGoal] = useState(null);
   const [showForm, setShowForm] = useState(true);
@@ -27,7 +26,7 @@ function GoalPage(props) {
       });
       const options = {
         method: "GET",
-        url: `${process.env.REACT_APP_API_URL}/goals?username=${apiUser.username}`,
+        url: `${process.env.REACT_APP_API_URL}/goals?username=${user.sub}`,
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
@@ -40,7 +39,11 @@ function GoalPage(props) {
     }
   };
 
-  if (!apiUser)
+  useEffect(() => {
+    getGoals();
+  }, [user]);
+
+  if (!isAuthenticated)
     return (
       <Container fluid>
         <Col className="justify-content-md-center">
@@ -55,7 +58,7 @@ function GoalPage(props) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    formDataObj.user = apiUser.id;
+    formDataObj.user = props.apiUser.id;
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
     });
@@ -70,7 +73,7 @@ function GoalPage(props) {
     const res = await axios(options);
     if (res.status === 201) {
       // Fetch goals again and close the form
-      await props.trigger(apiUser.id);
+      await getGoals();
       setShowForm(true);
     } else {
       // display an error message
@@ -84,7 +87,7 @@ function GoalPage(props) {
     });
     const options = {
       method: "DELETE",
-      url: `${process.env.REACT_APP_API_URL}/goals/${e.target.parentElement.parentElement.parentElement.id}`,
+      url: `${process.env.REACT_APP_API_URL}/goals/${e.target.parentElement.parentElement.id}`,
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
@@ -92,7 +95,7 @@ function GoalPage(props) {
     const res = await axios(options);
     if (res.status === 204) {
       // Fetch goals again
-      await props.trigger(apiUser.id);
+      await getGoals();
     } else {
       // display an error message
       <Alert variant="danger">{res}</Alert>;
@@ -100,9 +103,8 @@ function GoalPage(props) {
   };
 
   const handleMarkCompleted = async (e) => {
-    console.log(e.target);
     const goalId = parseInt(
-      e.target.parentElement.parentElement.parentElement.parentElement.id
+      e.target.parentElement.parentElement.parentElement.id
     );
     const editGoal = { completed: true, id: goalId };
     const accessToken = await getAccessTokenSilently({
@@ -119,7 +121,7 @@ function GoalPage(props) {
     const res = await axios(options);
     if (res.status === 200) {
       // Fetch goals again and close the modal
-      await props.trigger(apiUser.id);
+      await getGoals();
     } else {
       // display an error message
       <Alert variant="danger">{res}</Alert>;
@@ -130,7 +132,7 @@ function GoalPage(props) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    formDataObj.user = apiUser.id;
+    formDataObj.user = props.apiUser.id;
     formDataObj.id = editGoal.id;
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
@@ -146,7 +148,7 @@ function GoalPage(props) {
     const res = await axios(options);
     if (res.status === 200) {
       // Fetch goals again and close the form
-      await props.trigger(apiUser.id);
+      await getGoals();
       setShowForm(true);
     } else {
       // display an error message
@@ -177,7 +179,7 @@ function GoalPage(props) {
     <Container>
       <Row className="justify-content-md-center">
         <Col>
-          <h2>Goals</h2>
+          <h2>Goals Page</h2>
           <Button
             variant="primary"
             onClick={handleToggle}
@@ -229,8 +231,8 @@ function GoalPage(props) {
           </Button>
         </Form>
       )}
-      {apiUser
-        ? apiUser.goals.map((goal) => {
+      {data
+        ? data.goals.map((goal) => {
             return (
               <Container key={goal.id}>
                 <h5>{`This ${goal.timePeriod}'s goal: `}</h5>
@@ -253,7 +255,7 @@ function GoalPage(props) {
               </Container>
             );
           })
-        : `${apiUser.username} He`}
+        : "You don't have any goals yet."}
     </Container>
   );
 }

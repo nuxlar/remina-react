@@ -78,10 +78,6 @@ function Dashboard() {
     getOrCreateUser();
   }, [user]);
 
-  const trigger = (pk) => {
-    getApiUser(pk);
-  };
-
   if (!apiUser && isAuthenticated) {
     return (
       <Container fluid>
@@ -116,7 +112,7 @@ function Dashboard() {
             </Col>
           </Row>
           <Row>
-            <GoalPage apiUser={apiUser} trigger={trigger} />
+            <GoalPage apiUser={apiUser} />
           </Row>
           <Row></Row>
           <Row></Row>
