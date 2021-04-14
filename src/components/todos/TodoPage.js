@@ -16,38 +16,12 @@ import {
   Col,
 } from "react-bootstrap";
 
-function TodoPage() {
+function TodoPage(props) {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const [userMetadata, setUserMetadata] = useState(null);
   const [todos, setTodos] = useState(null);
   const [modalShow, setModalShow] = useState(false);
   const [editTodo, setEditTodo] = useState(null);
   const [filter, setFilter] = useState("Uncompleted");
-
-  const getUserMetadata = async () => {
-    const domain = "dev-l0qhbike.us.auth0.com";
-
-    try {
-      const accessToken = await getAccessTokenSilently({
-        audience: `https://${domain}/api/v2/`,
-        scope: "read:current_user",
-      });
-
-      const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
-
-      const metadataResponse = await axios.get(userDetailsByIdUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      const user_metadata = await metadataResponse;
-
-      setUserMetadata(user_metadata.data.user_metadata);
-    } catch (e) {
-      <Alert variant="danger">{e.message}</Alert>;
-    }
-  };
 
   const getTodos = async () => {
     try {
@@ -70,7 +44,6 @@ function TodoPage() {
 
   useEffect(() => {
     getTodos();
-    getUserMetadata();
   }, [user]);
 
   if (!isAuthenticated)
@@ -88,7 +61,7 @@ function TodoPage() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    formDataObj.user = userMetadata.api_user_id;
+    formDataObj.user = props.apiUser.id;
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
     });
@@ -115,7 +88,7 @@ function TodoPage() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    formDataObj.user = userMetadata.api_user_id;
+    formDataObj.user = props.apiUser.id;
     formDataObj.id = parseInt(e.target.offsetParent.id);
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,

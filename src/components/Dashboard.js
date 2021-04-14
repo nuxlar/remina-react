@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import GoalPage from "./goals/GoalPage";
 import HabitPage from "./habits/HabitPage";
+import TodoPage from "./todos/TodoPage";
 
 function Dashboard() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -118,7 +119,9 @@ function Dashboard() {
           <Row>
             <HabitPage apiUser={apiUser} />
           </Row>
-          <Row></Row>
+          <Row>
+            <TodoPage apiUser={apiUser} />
+          </Row>
         </Container>
       ) : (
         <>
