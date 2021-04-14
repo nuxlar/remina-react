@@ -232,6 +232,7 @@ function TodoPage(props) {
                         label="Completed"
                         onChange={handleMarkCompleted}
                         defaultChecked={todo.completed}
+                        disabled={filter === "Completed" ? true : null}
                       />
                       <Button
                         variant="secondary"
