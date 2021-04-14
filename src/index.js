@@ -4,19 +4,16 @@ import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { Auth0Provider } from "@auth0/auth0-react";
+import { BrowserRouter } from "react-router-dom";
+import Auth0ProviderWithHistory from "./auth/Auth0ProviderWithHistory";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Auth0Provider
-      domain="dev-l0qhbike.us.auth0.com"
-      clientId="FmnVheGe2CpMosxUUnIu4FnsLmIYCBvG"
-      redirectUri={window.location.origin}
-      audience="https://dev-l0qhbike.us.auth0.com/api/v2/"
-      scope="read:current_user update:current_user_metadata"
-    >
-      <App />
-    </Auth0Provider>
+    <BrowserRouter>
+      <Auth0ProviderWithHistory>
+        <App />
+      </Auth0ProviderWithHistory>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );

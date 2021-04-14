@@ -1,9 +1,10 @@
 import Favicon from "../favicon.ico";
-import { Navbar } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from "../auth/LoginButton";
 import LogoutButton from "../auth/LogoutButton";
+import SignupButton from "../auth/SignupButton";
 
 function NavBar() {
   const { isAuthenticated } = useAuth0();
@@ -23,10 +24,13 @@ function NavBar() {
         </Navbar.Brand>
         {isAuthenticated ? (
           <>
-            <LogoutButton></LogoutButton>
+            <LogoutButton />
           </>
         ) : (
-          <LoginButton></LoginButton>
+          <Nav className="mr-auto">
+            <LoginButton />
+            <SignupButton />
+          </Nav>
         )}
       </Navbar>
     </>
