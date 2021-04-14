@@ -3,6 +3,7 @@ import { Spinner, Container, Col, Row, ProgressBar } from "react-bootstrap";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import GoalPage from "./goals/GoalPage";
+import HabitPage from "./habits/HabitPage";
 
 function Dashboard() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -114,7 +115,9 @@ function Dashboard() {
           <Row>
             <GoalPage apiUser={apiUser} />
           </Row>
-          <Row></Row>
+          <Row>
+            <HabitPage apiUser={apiUser} />
+          </Row>
           <Row></Row>
         </Container>
       ) : (

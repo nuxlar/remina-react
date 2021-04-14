@@ -12,38 +12,12 @@ import {
   Alert,
 } from "react-bootstrap";
 
-function HabitPage() {
+function HabitPage(props) {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [habits, setHabits] = useState(null);
-  const [userMetadata, setUserMetadata] = useState(null);
   const [editHabit, setEditHabit] = useState(null);
   const [showForm, setShowForm] = useState(true);
   const [showFormE, setShowFormE] = useState(true);
-
-  const getUserMetadata = async () => {
-    const domain = "dev-l0qhbike.us.auth0.com";
-
-    try {
-      const accessToken = await getAccessTokenSilently({
-        audience: `https://${domain}/api/v2/`,
-        scope: "read:current_user",
-      });
-
-      const userDetailsByIdUrl = `https://${domain}/api/v2/users/${user.sub}`;
-
-      const metadataResponse = await axios.get(userDetailsByIdUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      const user_metadata = await metadataResponse;
-
-      setUserMetadata(user_metadata.data.user_metadata);
-    } catch (e) {
-      <Alert variant="danger">{e.message}</Alert>;
-    }
-  };
 
   const getHabits = async () => {
     try {
@@ -66,7 +40,6 @@ function HabitPage() {
 
   useEffect(() => {
     getHabits();
-    getUserMetadata();
   }, [user]);
 
   if (!isAuthenticated)
@@ -84,7 +57,7 @@ function HabitPage() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
-    formDataObj.user = userMetadata.api_user_id;
+    formDataObj.user = props.apiUser.id;
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
     });
@@ -112,7 +85,7 @@ function HabitPage() {
     const formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
     formDataObj.id = editHabit.id;
-    formDataObj.user = userMetadata.api_user_id;
+    formDataObj.user = props.apiUser.id;
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
     });
