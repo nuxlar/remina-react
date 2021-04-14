@@ -6,11 +6,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import Auth0ProviderWithHistory from "./auth/Auth0ProviderWithHistory";
+import NavBar from "./components/NavBar";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Auth0ProviderWithHistory>
+        <NavBar />
         <App />
       </Auth0ProviderWithHistory>
     </BrowserRouter>
