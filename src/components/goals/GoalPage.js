@@ -203,9 +203,15 @@ function GoalPage(props) {
             name="timePeriod"
             defaultValue={editGoal.timePeriod}
           >
-            <option value="day">Day</option>
-            <option value="week">Week</option>
-            <option value="month">Month</option>
+            <option value="day" disabled={data.dayDisable}>
+              Day
+            </option>
+            <option value="week" disabled={data.weekDisable}>
+              Week
+            </option>
+            <option value="month" disabled={data.monthDisable}>
+              Month
+            </option>
           </Form.Control>
           <Button variant="primary" type="submit">
             Submit
@@ -222,9 +228,15 @@ function GoalPage(props) {
           />
           <Form.Label>Type</Form.Label>
           <Form.Control as="select" name="timePeriod" defaultValue={null}>
-            <option value="day">Today</option>
-            <option value="week">This week</option>
-            <option value="month">This month</option>
+            <option value="day" disabled={data.dayDisable}>
+              Today
+            </option>
+            <option value="week" disabled={data.weekDisable}>
+              This week
+            </option>
+            <option value="month" disabled={data.monthDisable}>
+              This month
+            </option>
           </Form.Control>
           <Button variant="primary" type="submit">
             Submit
