@@ -45,8 +45,8 @@ function GoalPage(props) {
 
   if (!isAuthenticated)
     return (
-      <Container fluid>
-        <Col className="justify-content-md-center">
+      <Container fluid className="spinnerContainer">
+        <Col>
           <Spinner animation="border" role="status">
             <span className="sr-only">Loading...</span>
           </Spinner>

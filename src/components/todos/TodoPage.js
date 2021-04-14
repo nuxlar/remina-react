@@ -48,7 +48,7 @@ function TodoPage(props) {
 
   if (!isAuthenticated)
     return (
-      <Container fluid>
+      <Container fluid className="spinnerContainer">
         <Col className="justify-content-md-center">
           <Spinner animation="border" role="status">
             <span className="sr-only">Loading...</span>
