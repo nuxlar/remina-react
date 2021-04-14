@@ -57,25 +57,6 @@ function Dashboard() {
     }
   };
 
-  const getApiUser = async (pk) => {
-    try {
-      const accessToken = await getAccessTokenSilently({
-        audience: `https://project-remina/`,
-      });
-      const options = {
-        method: "POST",
-        url: `${process.env.REACT_APP_API_URL}/users/${pk}`,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      };
-      const response = await axios(options);
-      setApiUser(response.data);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   useEffect(() => {
     getOrCreateUser();
   }, [user]);
