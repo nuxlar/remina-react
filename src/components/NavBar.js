@@ -23,13 +23,17 @@ function NavBar() {
           Project Remina
         </Navbar.Brand>
         {isAuthenticated ? (
-          <>
+          <Nav className="ml-auto">
             <LogoutButton />
-          </>
+          </Nav>
         ) : (
-          <Nav className="mr-auto">
-            <LoginButton />
-            <SignupButton />
+          <Nav className="ml-auto">
+            <Nav.Link>
+              <LoginButton />
+            </Nav.Link>
+            <Nav.Link>
+              <SignupButton />
+            </Nav.Link>
           </Nav>
         )}
       </Navbar>
