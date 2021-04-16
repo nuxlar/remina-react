@@ -2,6 +2,19 @@ import React from "react";
 import { Col, Form, Button, Modal } from "react-bootstrap";
 
 function TodoModal(props) {
+  function formatDate(date, format) {
+    let mm = date.getMonth() + 1;
+    if (mm < 10) {
+      mm = `0${date.getMonth() + 1}`;
+    }
+    const map = {
+      mm,
+      dd: date.getDate(),
+      yyyy: date.getFullYear(),
+    };
+
+    return format.replace(/mm|dd|yyyy/gi, (matched) => map[matched]);
+  }
   return (
     <>
       {props.todo ? (
@@ -79,8 +92,16 @@ function TodoModal(props) {
               </Form.Row>
               <Form.Row>
                 <Col>
-                  <Form.Control type="date" name="dueDate" />
-                  <Form.Control type="time" name="dueTime" />
+                  <Form.Control
+                    type="date"
+                    name="dueDate"
+                    defaultValue={formatDate(new Date(), "yyyy-mm-dd")}
+                  />
+                  <Form.Control
+                    type="time"
+                    name="dueTime"
+                    defaultValue="12:00"
+                  />
                 </Col>
                 <Col>
                   <Form.Check
