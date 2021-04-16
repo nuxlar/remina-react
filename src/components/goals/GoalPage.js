@@ -122,6 +122,7 @@ function GoalPage(props) {
     const res = await axios(options);
     if (res.status === 200) {
       // Fetch goals again and close the modal
+      props.getApiUser();
       await getGoals();
     } else {
       // display an error message

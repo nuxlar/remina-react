@@ -88,11 +88,11 @@ function Dashboard() {
           </Row>
           <hr className="solid" />
           <Row>
-            <GoalPage apiUser={apiUser} />
+            <GoalPage apiUser={apiUser} getApiUser={getApiUser} />
           </Row>
           <hr className="solid" />
           <Row>
-            <HabitPage apiUser={apiUser} />
+            <HabitPage apiUser={apiUser} getApiUser={getApiUser} />
           </Row>
           <hr className="solid" />
           <Row>

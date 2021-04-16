@@ -146,6 +146,7 @@ function HabitPage(props) {
     const res = await axios(options);
     if (res.status === 201) {
       // Fetch habits again
+      props.getApiUser();
       await getHabits();
     } else {
       // display an error message
