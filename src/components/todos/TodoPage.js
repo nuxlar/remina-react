@@ -182,11 +182,17 @@ function TodoPage(props) {
     <Container>
       <Row className="justify-content-md-center">
         <Col>
-          <h2>Todos Page</h2>
-          <Button variant="primary" onClick={toggleModal}>
-            Add Todo &#43;
-          </Button>
+          <h2>Todos</h2>
         </Col>
+      </Row>
+      <Row className="justify-content-md-center">
+        <p className="mb-2 text-muted">
+          Add to-dos and mark them as completed.
+        </p>
+
+        <Button variant="primary" onClick={toggleModal}>
+          &#43;
+        </Button>
       </Row>
 
       <Row className="justify-content-md-center">

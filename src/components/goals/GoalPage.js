@@ -179,7 +179,10 @@ function GoalPage(props) {
     <Container>
       <Row className="justify-content-md-center">
         <Col>
-          <h2>Goals Page</h2>
+          <h2>Goals</h2>
+          <p className="mb-2 text-muted">
+            You can add a goal for today, this week, or this month.
+          </p>
           <Button
             variant="primary"
             onClick={handleToggle}

@@ -171,7 +171,10 @@ function HabitPage(props) {
     <Container>
       <Row className="justify-content-md-center">
         <Col>
-          <h2>Habits Page</h2>
+          <h2>Habits</h2>
+          <p className="mb-2 text-muted">
+            You can mark when you've completed a habit for today.
+          </p>
           <Button variant="primary" onClick={(e) => handleToggle(e)}>
             Add Habit &#43;
           </Button>
