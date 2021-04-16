@@ -185,7 +185,7 @@ function TodoPage(props) {
         <Col xs={12}>
           <h2>Todos</h2>
         </Col>
-        <Col xs={4} className="justify-content-md-center">
+        <Col xs={5} className="justify-content-md-center">
           <p className="mb-2 text-muted">
             Add to-dos and mark them as completed.
           </p>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { BsPlus } from "react-icons/bs";
 import axios from "axios";
 import {
   Form,
@@ -178,17 +179,22 @@ function GoalPage(props) {
   return (
     <Container>
       <Row className="justify-content-md-center">
-        <Col>
+        <Col xs={12}>
           <h2>Goals</h2>
+        </Col>
+        <Col xs={5}>
           <p className="mb-2 text-muted">
             You can add a goal for today, this week, or this month.
           </p>
+        </Col>
+        <Col xs={1}>
           <Button
             variant="primary"
             onClick={handleToggle}
             disabled={data ? data.stopper : true}
+            size="sm"
           >
-            Add Goal &#43;
+            <BsPlus size={25} />
           </Button>
         </Col>
       </Row>

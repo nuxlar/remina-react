@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { BsPlus } from "react-icons/bs";
 import axios from "axios";
 import {
   Table,
@@ -170,13 +171,17 @@ function HabitPage(props) {
   return (
     <Container>
       <Row className="justify-content-md-center">
-        <Col>
+        <Col xs={12}>
           <h2>Habits</h2>
+        </Col>
+        <Col xs={5}>
           <p className="mb-2 text-muted">
             You can mark when you've completed a habit for today.
           </p>
-          <Button variant="primary" onClick={(e) => handleToggle(e)}>
-            Add Habit &#43;
+        </Col>
+        <Col xs={1}>
+          <Button variant="primary" size="sm" onClick={(e) => handleToggle(e)}>
+            <BsPlus size={25} />
           </Button>
         </Col>
       </Row>
