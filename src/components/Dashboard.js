@@ -30,6 +30,25 @@ function Dashboard() {
     }
   };
 
+  const getApiUser = async () => {
+    try {
+      const accessToken = await getAccessTokenSilently({
+        audience: `https://project-remina/`,
+      });
+      const options = {
+        method: "GET",
+        url: `${process.env.REACT_APP_API_URL}/users/${apiUser.id}`,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      };
+      const response = await axios(options);
+      setApiUser(response.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   useEffect(() => {
     getOrCreateUser();
   }, [user]);
@@ -77,7 +96,7 @@ function Dashboard() {
           </Row>
           <hr className="solid" />
           <Row>
-            <TodoPage apiUser={apiUser} />
+            <TodoPage apiUser={apiUser} getApiUser={getApiUser} />
           </Row>
         </Container>
       ) : (

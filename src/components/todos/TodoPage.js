@@ -77,6 +77,9 @@ function TodoPage(props) {
     const res = await axios(options);
     if (res.status === 201) {
       // Fetch todos again and close the modal
+      if (res.data.completed === true) {
+        props.getApiUser();
+      }
       await getTodos();
       setModalShow(false);
     } else {
@@ -131,6 +134,7 @@ function TodoPage(props) {
     };
     const res = await axios(options);
     if (res.status === 200) {
+      props.getApiUser();
       await getTodos();
     } else {
       // display an error message
