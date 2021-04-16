@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TodoModal from "./TodoModal";
 import { useAuth0 } from "@auth0/auth0-react";
+import { BsPlus } from "react-icons/bs";
 import axios from "axios";
 
 import {
@@ -181,20 +182,20 @@ function TodoPage(props) {
   return (
     <Container>
       <Row className="justify-content-md-center">
-        <Col>
+        <Col xs={12}>
           <h2>Todos</h2>
         </Col>
+        <Col xs={4} className="justify-content-md-center">
+          <p className="mb-2 text-muted">
+            Add to-dos and mark them as completed.
+          </p>
+        </Col>
+        <Col xs={1} className="justify-content-md-center">
+          <Button variant="primary" size="sm" onClick={toggleModal}>
+            <BsPlus size={25} />
+          </Button>
+        </Col>
       </Row>
-      <Row className="justify-content-md-center">
-        <p className="mb-2 text-muted">
-          Add to-dos and mark them as completed.
-        </p>
-
-        <Button variant="primary" onClick={toggleModal}>
-          &#43;
-        </Button>
-      </Row>
-
       <Row className="justify-content-md-center">
         <Form.Group as={Form.Row}>
           <Form.Label column sm={3}>
