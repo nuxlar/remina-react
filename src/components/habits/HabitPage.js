@@ -266,7 +266,7 @@ function HabitPage(props) {
                       {typeof check !== "number" ? (
                         <BsCheckCircle size={25} color="green" />
                       ) : (
-                        <BsXCircle size={25} color="red" />
+                        <BsXCircle size={22} color="red" />
                       )}
                     </td>
                   ))}
