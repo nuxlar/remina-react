@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TodoModal from "./TodoModal";
 import { useAuth0 } from "@auth0/auth0-react";
-import { BsPlus } from "react-icons/bs";
+import { BsPlus, BsTrash, BsPencil } from "react-icons/bs";
 import axios from "axios";
 
 import {
@@ -148,7 +148,7 @@ function TodoPage(props) {
     });
     const options = {
       method: "DELETE",
-      url: `${process.env.REACT_APP_API_URL}/todos/${e.target.offsetParent.id}`,
+      url: `${process.env.REACT_APP_API_URL}/todos/${e.target.parentElement.offsetParent.id}`,
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
@@ -187,7 +187,7 @@ function TodoPage(props) {
     <Container>
       <Row className="justify-content-md-center">
         <Col xs={12}>
-          <h2>Todos</h2>
+          <h2>To-dos</h2>
         </Col>
         <Col xs={5} className="justify-content-md-center">
           <p className="mb-2 text-muted">
@@ -245,17 +245,24 @@ function TodoPage(props) {
                         defaultChecked={todo.completed}
                         disabled={filter === "Completed" ? true : null}
                       />
-                      <Button
-                        variant="secondary"
-                        onClick={(e) =>
-                          handleEditModal(e.target.offsetParent.id)
-                        }
-                      >
-                        Edit
-                      </Button>
-                      <Button variant="danger" onClick={handleDelete}>
-                        Delete
-                      </Button>
+                      <Card.Link>
+                        {" "}
+                        <Button
+                          variant="secondary"
+                          onClick={(e) =>
+                            handleEditModal(
+                              e.target.parentElement.offsetParent.id
+                            )
+                          }
+                        >
+                          <BsPencil size={20} />
+                        </Button>
+                      </Card.Link>
+                      <Card.Link>
+                        <Button variant="danger" onClick={handleDelete}>
+                          <BsTrash size={20} />
+                        </Button>
+                      </Card.Link>
                     </Card.Body>
                   </Card>
                 ))

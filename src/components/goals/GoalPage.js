@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { BsPlus } from "react-icons/bs";
+import { BsPlus, BsTrash } from "react-icons/bs";
 import axios from "axios";
 import {
   Form,
@@ -270,7 +270,7 @@ function GoalPage(props) {
                   </Col>
                   <Col>
                     <Button variant="danger" onClick={handleDelete}>
-                      X
+                      <BsTrash size={20} />
                     </Button>
                   </Col>
                 </Row>
