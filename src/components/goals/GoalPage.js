@@ -75,6 +75,7 @@ function GoalPage(props) {
     if (res.status === 201) {
       // Fetch goals again and close the form
       await getGoals();
+      e.target.reset();
       setShowForm(true);
     } else {
       // display an error message
@@ -162,6 +163,7 @@ function GoalPage(props) {
     if (res.status === 200) {
       // Fetch goals again and close the form
       await getGoals();
+      e.target.reset();
       setShowForm(true);
     } else {
       // display an error message
