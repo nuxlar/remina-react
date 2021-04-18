@@ -282,7 +282,7 @@ function GoalPage(props) {
                     >{`${goal.description}`}</Button>
                   </Col>
                   <Col>
-                    <Button variant="danger" onClick={handleDelete}>
+                    <Button variant="danger" size="sm" onClick={handleDelete}>
                       <BsTrash size={20} />
                     </Button>
                   </Col>
