@@ -80,6 +80,7 @@ function HabitPage(props) {
     if (res.status === 201) {
       // Fetch habits again and close the form
       await getHabits();
+      e.target.reset();
       setShowForm(false);
     } else {
       // display an error message
@@ -108,6 +109,7 @@ function HabitPage(props) {
     if (res.status === 200) {
       // Fetch habits again and close the form
       await getHabits();
+      e.target.reset();
       setShowForm(true);
     } else {
       // display an error message
@@ -116,12 +118,22 @@ function HabitPage(props) {
   };
 
   const handleDelete = async (e) => {
+    let habitId;
+
+    if (e.target.type) {
+      habitId = e.target.parentElement.parentElement.id;
+    } else if (e.target.childElementCount === 2) {
+      habitId = e.target.parentElement.offsetParent.parentElement.id;
+    } else {
+      habitId =
+        e.target.parentElement.parentElement.offsetParent.parentElement.id;
+    }
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
     });
     const options = {
       method: "DELETE",
-      url: `${process.env.REACT_APP_API_URL}/habits/${e.target.parentElement.parentElement.id}`,
+      url: `${process.env.REACT_APP_API_URL}/habits/${habitId}`,
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
@@ -137,9 +149,18 @@ function HabitPage(props) {
   };
 
   const handleCheckAdd = async (e) => {
-    console.log("HELLO", e.target);
+    let habitId;
+
+    if (e.target.type) {
+      habitId = e.target.offsetParent.parentElement.id;
+    } else if (e.target.childElementCount === 2) {
+      habitId = e.target.parentElement.offsetParent.parentElement.id;
+    } else {
+      habitId =
+        e.target.parentElement.parentElement.offsetParent.parentElement.id;
+    }
     const check = {
-      habit: e.target.parentElement.parentElement.parentElement.id,
+      habit: habitId,
     };
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
@@ -253,11 +274,15 @@ function HabitPage(props) {
                   <td onClick={(e) => handleEdit(e.target.parentElement.id)}>
                     {habit.description}{" "}
                     {habit.flags.todayCompleted ? null : (
-                      <Button variant="primary" onClick={handleCheckAdd}>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={handleCheckAdd}
+                      >
                         <BsCheckAll size={20} />
                       </Button>
                     )}{" "}
-                    <Button variant="danger" onClick={handleDelete}>
+                    <Button variant="danger" size="sm" onClick={handleDelete}>
                       <BsTrash size={20} />
                     </Button>
                   </td>
