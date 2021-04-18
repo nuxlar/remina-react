@@ -83,12 +83,23 @@ function GoalPage(props) {
   };
 
   const handleDelete = async (e) => {
+    console.log(e.target);
+    console.log(e.target.type);
+    let goalId;
+
+    if (e.target.type) {
+      goalId = e.target.parentElement.parentElement.id;
+    } else {
+      goalId =
+        e.target.parentElement.parentElement.parentElement.parentElement.id;
+    }
+
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
     });
     const options = {
       method: "DELETE",
-      url: `${process.env.REACT_APP_API_URL}/goals/${e.target.parentElement.parentElement.id}`,
+      url: `${process.env.REACT_APP_API_URL}/goals/${goalId}`,
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
