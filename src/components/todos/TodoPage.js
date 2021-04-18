@@ -81,6 +81,7 @@ function TodoPage(props) {
         props.getApiUser();
       }
       await getTodos();
+      e.target.reset();
       setModalShow(false);
     } else {
       // display an error message
@@ -109,6 +110,7 @@ function TodoPage(props) {
     if (res.status === 200) {
       // Fetch todos again and close the modal
       await getTodos();
+      e.target.reset();
       toggleModal();
     } else {
       // display an error message
@@ -143,12 +145,20 @@ function TodoPage(props) {
   };
 
   const handleDelete = async (e) => {
+    let todoId;
+
+    if (e.target.type) {
+      todoId = e.target.parentElement.offsetParent.id;
+    } else {
+      todoId = e.target.parentElement.parentElement.offsetParent.id;
+    }
+
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
     });
     const options = {
       method: "DELETE",
-      url: `${process.env.REACT_APP_API_URL}/todos/${e.target.parentElement.offsetParent.id}`,
+      url: `${process.env.REACT_APP_API_URL}/todos/${todoId}`,
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
@@ -164,7 +174,15 @@ function TodoPage(props) {
     }
   };
 
-  const handleEditModal = (todoId) => {
+  const handleEditModal = (e) => {
+    let todoId;
+
+    if (e.target.type) {
+      todoId = e.target.parentElement.offsetParent.id;
+    } else {
+      todoId = e.target.parentElement.parentElement.offsetParent.id;
+    }
+
     const editTodo = todos.find((todo) => todo.id === parseInt(todoId));
     setEditTodo(editTodo);
     setModalShow(true);
@@ -247,14 +265,7 @@ function TodoPage(props) {
                       />
                       <Card.Link>
                         {" "}
-                        <Button
-                          variant="secondary"
-                          onClick={(e) =>
-                            handleEditModal(
-                              e.target.parentElement.offsetParent.id
-                            )
-                          }
-                        >
+                        <Button variant="secondary" onClick={handleEditModal}>
                           <BsPencil size={20} />
                         </Button>
                       </Card.Link>
