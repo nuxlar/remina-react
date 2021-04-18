@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { BsPlus } from "react-icons/bs";
+import {
+  BsPlus,
+  BsTrash,
+  BsCheckCircle,
+  BsCheckAll,
+  BsXCircle,
+} from "react-icons/bs";
 import axios from "axios";
 import {
   Table,
@@ -131,7 +137,10 @@ function HabitPage(props) {
   };
 
   const handleCheckAdd = async (e) => {
-    const check = { habit: e.target.parentElement.parentElement.id };
+    console.log("HELLO", e.target);
+    const check = {
+      habit: e.target.parentElement.parentElement.parentElement.id,
+    };
     const accessToken = await getAccessTokenSilently({
       audience: `https://project-remina/`,
     });
@@ -242,18 +251,24 @@ function HabitPage(props) {
             ? habits.map((habit) => (
                 <tr key={habit.id} id={habit.id}>
                   <td onClick={(e) => handleEdit(e.target.parentElement.id)}>
-                    <Button variant="danger" onClick={handleDelete}>
-                      Delete
-                    </Button>
-                    {habit.description}
+                    {habit.description}{" "}
                     {habit.flags.todayCompleted ? null : (
                       <Button variant="primary" onClick={handleCheckAdd}>
-                        Add
+                        <BsCheckAll size={20} />
                       </Button>
-                    )}
+                    )}{" "}
+                    <Button variant="danger" onClick={handleDelete}>
+                      <BsTrash size={20} />
+                    </Button>
                   </td>
                   {habit.checks.map((check, index) => (
-                    <td key={index}>{typeof check !== "number" ? "O" : "X"}</td>
+                    <td key={index}>
+                      {typeof check !== "number" ? (
+                        <BsCheckCircle size={25} color="green" />
+                      ) : (
+                        <BsXCircle size={25} color="red" />
+                      )}
+                    </td>
                   ))}
                 </tr>
               ))
