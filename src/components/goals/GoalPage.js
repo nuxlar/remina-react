@@ -253,22 +253,22 @@ function GoalPage(props) {
           </Button>
         </Form>
       )}
-      {data
+      {data && data.goals
         ? data.goals.map((goal) => {
             return (
               <Container key={goal.id}>
                 <h5>{`This ${goal.timePeriod}'s goal: `}</h5>
                 <Row id={goal.id}>
-                  <Col sm={2}>
+                  <Col>
                     <FormCheck type="checkbox" onChange={handleMarkCompleted} />
                   </Col>
-                  <Col sm={8}>
+                  <Col>
                     <Button
                       variant="secondary"
                       onClick={handleEdit}
                     >{`${goal.description}`}</Button>
                   </Col>
-                  <Col sm={2}>
+                  <Col>
                     <Button variant="danger" onClick={handleDelete}>
                       X
                     </Button>
