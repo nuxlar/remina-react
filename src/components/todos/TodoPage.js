@@ -265,12 +265,20 @@ function TodoPage(props) {
                       />
                       <Card.Link>
                         {" "}
-                        <Button variant="secondary" onClick={handleEditModal}>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={handleEditModal}
+                        >
                           <BsPencil size={20} />
                         </Button>
                       </Card.Link>
                       <Card.Link>
-                        <Button variant="danger" onClick={handleDelete}>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={handleDelete}
+                        >
                           <BsTrash size={20} />
                         </Button>
                       </Card.Link>
