@@ -17,3 +17,22 @@ hr.solid {
   padding: 5px;
   border-top: 3px solid #bbb;
 }
+
+.home-jumbotron {
+  background-image: url(img/photo.jpeg);
+  height: 500px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: azure;
+  text-align: center;
+}
+
+.jumbotron-content {
+  margin: 0;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
