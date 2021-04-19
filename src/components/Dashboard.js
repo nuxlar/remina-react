@@ -67,8 +67,8 @@ function Dashboard() {
     return (
       <Container fluid classNameName="spinnerContainer">
         <Col classNameName="justify-content-md-center">
-          <Spinner animation="border" role="status">
-            <span classNameName="sr-only">Loading...</span>
+          <Spinner animation="border" role="status" variant="primary">
+            <span classNameName="sr-only"></span>
           </Spinner>
         </Col>
       </Container>
