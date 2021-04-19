@@ -127,9 +127,9 @@ function Dashboard() {
                 </Card.Subtitle>
                 <Card.Text>
                   I've always wished there could be a real-life leveling system
-                  and that's what project remina is for productivity. By
-                  receiving XP and leveling up for doing things you'd normally
-                  do, you have a tangible, fun way of making progress.
+                  and that's what project remina is for productivity, by
+                  receiving XP for doing things you'd normally do, you have a
+                  tangible, fun way of making progress.
                 </Card.Text>
               </Card.Body>
               <Card.Footer>
